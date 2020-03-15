@@ -40,18 +40,22 @@ import * as actions from './actions'
 import * as mutations from './mutations'
 import * as getters from './getters'
 
+import moduleBanner from './modules/moduleBanner'
+import editorBanner from './modules/editorBanner'
+
 Vue.use(Vuex)
 const store = new Vuex.Store({
   actions: actions.actions,
   mutations: mutations.mutations,
   getters: getters.getters,
   modules: {
-    // moduleEntrance
+    moduleBanner,
+    editorBanner
   },
   state: {
     theme: 'index',
-    shortName: 'BDP',
-    fullName: 'Admin BDP',
+    shortName: 'Enkel',
+    fullName: 'Enkel Admin',
     collapsed: false, // 是否收起侧边栏菜单
     privateKey: 'gray-config-9',
     cryptoType: 'TripleDES',

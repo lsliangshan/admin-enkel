@@ -18,7 +18,7 @@ export default {
 <style lang="less" scoped>
 .content {
   width: 100%;
-  height: 100%;
+  height: calc(~"100% - 64px");
   display: flex;
   flex-direction: row;
   align-items: center;

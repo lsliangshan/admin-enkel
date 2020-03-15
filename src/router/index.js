@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { moduleRouter, editorRouter } from './routes'
 
 Vue.use(Router)
 
@@ -10,7 +11,7 @@ export const routerLogin = {
     title: '登录'
   },
   components: {
-    HomeRouter: () => import('./views/Login')
+    HomeRouter: () => import('../views/Login')
   }
 }
 
@@ -21,7 +22,7 @@ export const page404 = {
     title: '页面丢了'
   },
   components: {
-    HomeRouter: () => import('./views/error/404')
+    HomeRouter: () => import('../views/error/404')
   }
 }
 
@@ -32,8 +33,12 @@ export const routerContent = {
     title: 'BDP业务分发平台'
   },
   components: {
-    HomeRouter: () => import('./views/Home')
-  }
+    HomeRouter: () => import('../views/Home')
+  },
+  children: [
+    ...moduleRouter.children,
+    ...editorRouter.children
+  ]
 }
 
 export default new Router({
@@ -42,6 +47,7 @@ export default new Router({
   routes: [
     routerLogin,
     routerContent,
+    // ...moduleRouter.children,
     page404
   ]
 })

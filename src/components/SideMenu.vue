@@ -18,10 +18,11 @@
            v-else>{{shortName}}</div>
     </transition-group>
     <div class="side_menu_content">
-      <Menu active-name="1-2"
+      <Menu :active-name="mainMenu + '-' + subMenu"
             theme="dark"
             width="auto"
-            :open-names="['1']">
+            :open-names="[mainMenu]"
+            @on-select="navTo">
         <transition-group name="unfold-menu"
                           :css="false"
                           @before-enter="beforeEnter"
@@ -34,13 +35,17 @@
                v-if="!collapsed">
             <Submenu :name="menu.name">
               <template slot="title">
-                <Icon :type="menu.icon"></Icon>
-                <span v-text="menu.text"></span>
+                <div class="menu_item">
+                  <svg class="menu_item_icon">
+                    <use :xlink:href="'#' + menu.icon"></use>
+                  </svg>
+                  <span v-text="menu.label"></span>
+                </div>
               </template>
               <MenuItem v-for="(item, idx) in menu.children"
                         :key="idx"
                         :name="menu.name + '-' + item.name"
-                        v-text="item.text">
+                        v-text="item.label">
               </MenuItem>
             </Submenu>
           </div>
@@ -64,8 +69,9 @@
                     word-wrap
                     placement="right">
               <div class="fold_menu_item_icon">
-                <Icon :type="menu.icon"
-                      size="18"></Icon>
+                <svg>
+                  <use :xlink:href="'#' + menu.icon"></use>
+                </svg>
               </div>
               <div class="api"
                    slot="content">
@@ -74,7 +80,8 @@
                        v-for="(item, idx) in menu.children"
                        :key="idx"
                        :name="item.name"
-                       v-text="item.text"></div>
+                       @click="navTo(menu.name + '-' + item.name)"
+                       v-text="item.label"></div>
                 </div>
               </div>
             </Poptip>
@@ -89,10 +96,16 @@
 // https://blog.csdn.net/Hua929323125/article/details/85319341
 import Velocity from 'velocity-animate'
 import { Menu, MenuGroup, MenuItem, Submenu, Icon, Poptip } from 'view-design'
+import { routes } from '../router/routes'
 export default {
   name: 'SideMenu',
   components: {
     Menu, MenuGroup, MenuItem, Submenu, Icon, Poptip
+  },
+  data () {
+    return {
+      routes: []
+    }
   },
   computed: {
     menus () {
@@ -111,12 +124,21 @@ export default {
       return this.$store.state.loginInfo
     },
     authorizedMenus () {
-      return this.menus.filter(item => {
+      return this.routes.filter(item => {
         let authorized = item.children.filter(itm => itm.role.indexOf(this.loginInfo.role) > -1)
         item.children = authorized || []
         return authorized.length > 0
       })
-    }
+    },
+    mainMenu () {
+      return this.$route.path.split('/')[1]
+    },
+    subMenu () {
+      return this.$route.path.split('/')[2]
+    },
+  },
+  mounted () {
+    this.routes = routes
   },
   methods: {
     beforeEnter (el) {
@@ -231,6 +253,9 @@ export default {
           })
         }
       }
+    },
+    navTo (e) {
+      this.$router.replace(`/${e.split('-')[0]}/${e.replace(/^([^-]*-)(.*)$/, '$2')}`)
     }
   }
 }
@@ -286,6 +311,25 @@ export default {
       transition: all 0.2s ease-in-out;
       &:hover {
         color: rgba(255, 255, 255, 1);
+      }
+      &_icon {
+        svg {
+          width: 24px;
+          height: 24px;
+          fill: #c8c8c8;
+        }
+      }
+    }
+    .menu_item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      svg {
+        width: 18px;
+        height: 18px;
+        fill: #c8c8c8;
+        margin-right: 8px;
+        margin-bottom: 2px;
       }
     }
   }

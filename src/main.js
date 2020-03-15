@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import { sync } from 'vuex-router-sync'
-import router from './router'
+import router from './router/index'
 import store from './store'
 import './registerServiceWorker'
 import * as filters from './filters'
