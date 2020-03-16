@@ -52,17 +52,19 @@
         <div class="material_item_blank"></div>
       </div>
     </Drawer>
+
   </div>
 </template>
 
 <script>
-import { Button, Icon, Drawer, Table } from 'view-design'
+import { Button, Icon, Drawer, Table, Switch, Modal, Input, Form, FormItem } from 'view-design'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('../../store/modules')
 export default {
   name: 'EditorBanner',
   components: {
-    Button, Icon, Drawer, Table
+    Button, Icon, Drawer, Table, Modal, Input, Form, FormItem,
+    Switch
   },
   data () {
     return {
@@ -77,7 +79,14 @@ export default {
       loading: true,
       pageIndex: 1,
       pageSize: 20,
-      containerHeight: 300
+      containerHeight: 300,
+      modifyModal: {
+        shown: false,
+        data: {
+          status: false
+        },
+        loading: true
+      }
     }
   },
   computed: {
@@ -140,7 +149,14 @@ export default {
         {
           width: 200,
           title: '状态',
-          key: 'status'
+          key: 'status',
+          render: (h, params) => {
+            return h('Switch', {
+              props: {
+                value: params.row.status
+              }
+            })
+          }
         },
         {
           title: '操作',
@@ -156,16 +172,12 @@ export default {
               }
             }, [
               h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
+                attrs: {
+                  class: 'btn-warning'
                 },
                 on: {
                   click: () => {
-                    alert('编辑')
+                    // alert('编辑')
                   }
                 }
               }, '编辑'),
@@ -173,8 +185,6 @@ export default {
                 props: {
                   type: 'error',
                   size: 'small'
-                },
-                style: {
                 },
                 on: {
                   click: () => {

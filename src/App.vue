@@ -81,4 +81,79 @@ body {
 .ivu-menu-item-active {
   color: @theme-color!important;
 }
+
+.btn-warning {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid #f90;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: color 0.2s linear, background-color 0.2s linear,
+    border 0.2s linear, box-shadow 0.2s linear;
+  height: 24px;
+  margin-right: 5px;
+  color: #fff;
+  background-color: #f90;
+  padding: 0 7px;
+  font-size: 14px;
+  border-radius: 3px;
+  outline: none;
+  &:hover {
+    color: #fff;
+    background-color: #ffad33;
+    border-color: #ffad33;
+  }
+  &:active {
+    color: #f2f2f2;
+    background-color: #f29100;
+    border-color: #f29100;
+  }
+}
+.btn-error {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid #ed4014;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: color 0.2s linear, background-color 0.2s linear,
+    border 0.2s linear, box-shadow 0.2s linear;
+  height: 24px;
+  margin-right: 5px;
+  color: #fff;
+  background-color: #ed4014;
+  padding: 0 7px;
+  font-size: 14px;
+  border-radius: 3px;
+  outline: none;
+  &:hover {
+    color: #fff;
+    background-color: #f16643;
+    border-color: #f16643;
+  }
+  &:active {
+    color: #f2f2f2;
+    background-color: #e13d13;
+    border-color: #e13d13;
+  }
+}
 </style>

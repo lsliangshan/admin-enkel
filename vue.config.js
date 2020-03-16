@@ -5,5 +5,5 @@ module.exports = {
         javascriptEnabled: true,
       }
     }
-  },
+  }
 }

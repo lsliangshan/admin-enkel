@@ -32,59 +32,59 @@
 </template>
 
 <script>
-  import { Icon, Avatar, Dropdown, DropdownMenu, DropdownItem } from 'view-design'
-  import * as types from '../store/mutation-types'
-  export default {
-    name: 'LoginBox',
-    components: {
-      Icon, Avatar, Dropdown, DropdownMenu, DropdownItem
+import { Icon, Avatar, Dropdown, DropdownMenu, DropdownItem } from 'view-design'
+import * as types from '../store/mutation-types'
+export default {
+  name: 'LoginBox',
+  components: {
+    Icon, Avatar, Dropdown, DropdownMenu, DropdownItem
+  },
+  computed: {
+    assets () {
+      return this.$store.state.assets
     },
-    computed: {
-      assets () {
-        return this.$store.state.assets
-      },
-      loginInfo () {
-        return this.$store.state.loginInfo
+    loginInfo () {
+      return this.$store.state.loginInfo
+    }
+  },
+  methods: {
+    avatarLoadError (evt) {
+      evt.target.setAttribute('src', this.assets.defaultAvatar)
+    },
+    itemClickHandler (name) {
+      if (name === 'logout') {
+        this.logout()
       }
     },
-    methods: {
-      avatarLoadError (evt) {
-        evt.target.setAttribute('src', this.assets.defaultAvatar)
-      },
-      itemClickHandler (name) {
-        if (name === 'logout') {
-          this.logout()
-        }
-      },
-      logout () {
-        this.$router.replace({
-          name: 'Login'
-        })
-        this.$store.commit(types.LOG_OUT)
-      }
+    logout () {
+      this.$router.replace({
+        name: 'Login'
+      })
+      this.$store.commit(types.LOG_OUT)
     }
   }
+}
 </script>
 
 <style lang="less" scoped>
-  @import url("../themes/index.less");
-  .login_box {
-    user-select: none;
+@import url("../themes/index.less");
+.login_box {
+  user-select: none;
+}
+.login_box_content {
+  padding: 0 15px;
+  height: 100%;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  &:hover {
+    background-color: @hover-bg-color;
   }
-  .login_box_content {
-    padding: 0 15px;
-    height: 100%;
-    user-select: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    cursor: pointer;
-    &:hover {
-      background-color: @hover-bg-color;
-    }
-    .login_username {
-      margin-right: 15px;
-    }
+  .login_username {
+    margin-right: 15px;
   }
+}
 </style>
