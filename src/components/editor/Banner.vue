@@ -6,13 +6,82 @@
               @click="openMaterialDrawer">新增</Button>
     </div>
     <div class="editor_container_content">
-      <Table class="entrance_table"
+      <!-- <Table class="entrance_table"
              :loading="loading"
              :stripe="true"
              border
              :height="containerHeight"
              :data="list"
-             :columns="columns"></Table>
+             :columns="columns"></Table> -->
+      <div class="editor_container_content_left">
+        <div class="list-group-header"
+             slot="header">
+          <Button type="warning"
+                  size="small"
+                  style="margin-right: 5px;"
+                  @click="resetList">重置</Button>
+          <Button type="primary"
+                  size="small">确定</Button>
+        </div>
+        <draggable element="span"
+                   v-model="list2"
+                   v-bind="dragOptions"
+                   :move="onMove">
+          <transition-group name="no"
+                            class="list-group"
+                            tag="div">
+            <div class="list-group-item"
+                 v-for="(item, index) in list2"
+                 :key="item.uuid"
+                 :class="{'disabled': !item.status}">
+              <!-- <i :class="!item.status? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'"
+                 @click=" item.status=!item.status"
+                 aria-hidden="true"></i>
+              {{item.enkel_banner.title}} -->
+              <div class="list-group-item-img">
+                <img :src="item.enkel_banner.cover"
+                     :alt="item.enkel_banner.title">
+              </div>
+              <div class="list-group-item-desc">{{item.enkel_banner.title}}</div>
+            </div>
+          </transition-group>
+        </draggable>
+
+      </div>
+      <div class="editor_container_content_right">
+        <div class="list-group-header"
+             slot="header">
+          <Select v-model="sortBy"
+                  style="width: 150px"
+                  @on-change="sortList">
+            <Option v-for="item in sorts"
+                    :value="item.value"
+                    :key="item.value">{{ item.name }}</Option>
+          </Select>
+        </div>
+        <draggable element="span"
+                   v-model="list"
+                   v-bind="dragOptions"
+                   :move="onMove"
+                   @start="isDragging=true"
+                   @end="isDragging=false">
+          <transition-group type="transition"
+                            :name="'flip-list'"
+                            class="list-group"
+                            tag="div">
+            <div class="list-group-item"
+                 v-for="(item, index) in list"
+                 :key="item.uuid"
+                 :class="{'disabled': !item.status}">
+              <div class="list-group-item-img">
+                <img :src="item.enkel_banner.cover"
+                     :alt="item.enkel_banner.title">
+              </div>
+              <div class="list-group-item-desc">{{item.enkel_banner.title}}</div>
+            </div>
+          </transition-group>
+        </draggable>
+      </div>
     </div>
 
     <Drawer title="选择素材"
@@ -58,6 +127,7 @@
 
 <script>
 // import { Button, Icon, Drawer, Table, Switch, Modal, Input, Form, FormItem } from 'view-design'
+import draggable from 'vuedraggable'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('../../store/modules')
 export default {
@@ -65,6 +135,7 @@ export default {
   components: {
     // Button, Icon, Drawer, Table, Modal, Input, Form, FormItem,
     // Switch
+    draggable
   },
   data () {
     return {
@@ -76,6 +147,7 @@ export default {
         pageSize: 20
       },
       list: [],
+      list2: [],
       loading: true,
       pageIndex: 1,
       pageSize: 20,
@@ -86,7 +158,29 @@ export default {
           status: false
         },
         loading: true
-      }
+      },
+      editable: true,
+      isDragging: false,
+      delayedDragging: false,
+      sortBy: 'timeDesc',
+      sorts: [
+        {
+          name: '按时间降序',
+          value: 'timeDesc'
+        },
+        {
+          name: '按时间升序',
+          value: 'timeAsc'
+        },
+        {
+          name: '可用优先',
+          value: 'statusTrue'
+        },
+        {
+          name: '不可用优先',
+          value: 'statusFalse'
+        }
+      ]
     }
   },
   computed: {
@@ -96,145 +190,14 @@ export default {
     state () {
       return this.store.state
     },
-    columns () {
-      return [
-        {
-          type: 'index',
-          width: 60,
-          align: 'center',
-          // fixed: 'left'
-        },
-        {
-          title: '标题',
-          width: 200,
-          // fixed: 'left',
-          render: (h, params) => {
-            return h('span', params.row.enkel_banner.title)
-          }
-        },
-        {
-          title: '图片',
-          width: 250,
-          render: (h, params) => {
-            console.log('params: ', params.row)
-            return h('div', {
-              style: {
-                width: '214px',
-                height: '150px',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }
-            }, [
-              h('img', {
-                style: {
-                  maxWidth: '100%',
-                  maxHeight: '100%'
-                },
-                attrs: {
-                  src: params.row.enkel_banner.cover
-                }
-              })
-            ])
-          }
-        },
-        {
-          title: '跳转地址',
-          width: 250,
-          render: (h, params) => {
-            return h('span', params.row.enkel_banner.url)
-          }
-        },
-        {
-          title: '排序',
-          width: 200,
-          render: (h, params) => {
-            return h('Input', {
-              props: {
-                // type: 'number',
-                number: true
-              },
-              attrs: {
-                placeholder: '排序',
-                value: params.row.sort
-              },
-              style: {
-                outline: 'none',
-                userSelect: 'none',
-                boxShadow: 'none'
-              },
-              on: {
-                input: (value) => {
-                  params.row.sort = Math.max(-1, value)
-                }
-              }
-            })
-          }
-        },
-        {
-          width: 100,
-          title: '状态',
-          key: 'status',
-          render: (h, params) => {
-            return h('i-switch', {
-              props: {
-                value: params.row.status
-              },
-              style: {
-                outline: 'none',
-                userSelect: 'none',
-                boxShadow: 'none'
-              },
-              attrs: {
-                trueColor: '#13ce66',
-                falseColor: '#ff4949'
-              }
-            })
-          }
-        },
-        {
-          title: '操作',
-          key: 'action',
-          width: 200,
-          align: 'center',
-          // fixed: 'right',
-          render: (h, params) => {
-            return h('div', {
-              style: {
-                paddingTop: '8px',
-                paddingBottom: '8px'
-              }
-            }, [
-              h('Button', {
-                props: {
-                  type: 'warning',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '8px'
-                },
-                on: {
-                  click: () => {
-                    // alert('编辑')
-                  }
-                }
-              }, '编辑'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                  }
-                }
-              }, '删除')
-            ])
-          }
-        }
-      ]
-    }
+    dragOptions () {
+      return {
+        animation: 0,
+        group: "description",
+        disabled: !this.editable,
+        ghostClass: "ghost"
+      };
+    },
   },
   created () {
     this.init()
@@ -338,6 +301,60 @@ export default {
       } else {
         this.$Message.error(response.message || '新增失败，请稍后再试')
       }
+    },
+    onMove ({ relatedContext, draggedContext }) {
+      const relatedElement = relatedContext.element;
+      const draggedElement = draggedContext.element;
+      // return (
+      //   (!relatedElement || relatedElement.status) && draggedElement.status
+      // );
+      return draggedElement.status
+    },
+    sortList () {
+      this.list.sort((item1, item2) => {
+        if (this.sortBy === 'timeDesc') {
+          if (Number(item1.updateTime) < Number(item2.updateTime)) {
+            return 1
+          } else {
+            return -1
+          }
+        } else if (this.sortBy === 'timeAsc') {
+          if (Number(item1.updateTime) > Number(item2.updateTime)) {
+            return 1
+          } else {
+            return -1
+          }
+        } else if (this.sortBy === 'statusTrue') {
+          if (!item1.status && item2.status) {
+            return 1
+          } else {
+            return -1
+          }
+        } else if (this.sortBy === 'statusFalse') {
+          if (item1.status && !item2.status) {
+            return 1
+          } else {
+            return -1
+          }
+        } else {
+          return -1
+        }
+      })
+    },
+    resetList () {
+      this.list = this.list.concat(this.list2)
+      this.list2 = []
+    }
+  },
+  watch: {
+    isDragging (newValue) {
+      if (newValue) {
+        this.delayedDragging = true;
+        return;
+      }
+      this.$nextTick(() => {
+        this.delayedDragging = false;
+      });
     }
   }
 }
@@ -369,6 +386,148 @@ export default {
   &_content {
     width: 100%;
     height: calc(~"100% - 48px");
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    &_left {
+      width: 280px;
+      height: 100%;
+      overflow-y: auto;
+      background-color: #f0f0f0;
+      .list-group {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &-header {
+          position: sticky;
+          top: 0;
+          left: 0;
+          z-index: 2;
+          padding-left: 15px;
+          width: 100%;
+          height: 48px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          background-color: #f0f0f0;
+        }
+        &-item {
+          cursor: move;
+          margin: 8px;
+          width: 150px;
+          height: 182px;
+          border-radius: 4px;
+          overflow: hidden;
+          background-color: #fff;
+          box-shadow: 0 0 15px 1px #c8c8c8;
+          // opacity: 1;
+          transition: all 0.25s cubic-bezier(0.215, 1.61, 0.355, 1);
+          transform: scale3d(1, 1, 1);
+          &.disabled {
+            opacity: 0.3;
+          }
+          &-img {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
+          }
+          &-desc {
+            width: 100%;
+            height: 32px;
+            padding: 0 8px;
+            box-sizing: border-box;
+            line-height: 32px;
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            background-color: #f8f8f8;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+    &_right {
+      width: calc(~"100% - 280px");
+      height: 100%;
+      overflow-y: auto;
+      // background-color: #8c8c8c;
+      .list-group {
+        min-height: 182px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 10px;
+        box-sizing: border-box;
+        &-item {
+          cursor: move;
+          margin: 8px;
+          width: 150px;
+          height: 182px;
+          border-radius: 4px;
+          overflow: hidden;
+          background-color: #fff;
+          box-shadow: 0 0 15px 1px #c8c8c8;
+          // opacity: 1;
+          transition: all 0.5s ease-in-out;
+          // transition: all 0.5s cubic-bezier(0.215, 1.61, 0.355, 1);
+          transform: scale3d(1, 1, 1);
+          &.disabled {
+            opacity: 0.3;
+          }
+          &-img {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
+          }
+          &-desc {
+            width: 100%;
+            height: 32px;
+            padding: 0 8px;
+            box-sizing: border-box;
+            line-height: 32px;
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            background-color: #f8f8f8;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+        &-header {
+          position: sticky;
+          top: 0;
+          left: 0;
+          z-index: 2;
+          padding-left: 15px;
+          width: 100%;
+          height: 48px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          background-color: #f5f7f9;
+        }
+      }
+    }
   }
 }
 .material_header {
@@ -421,10 +580,6 @@ export default {
       height: 32px;
       padding: 0 8px;
       box-sizing: border-box;
-      // display: flex;
-      // flex-direction: row;
-      // align-items: center;
-      // justify-content: center;
       line-height: 32px;
       text-align: center;
       font-size: 13px;
@@ -454,4 +609,38 @@ export default {
     height: 0;
   }
 }
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
+}
+.ghost {
+  opacity: 0.5;
+  transform: scale3d(0.8, 0.8, 1) !important;
+  // background: #c8ebfb;
+}
+// .list-group {
+//   // min-height: 20px;
+//   width: 100%;
+//   height: 100%;
+//   padding: 10px;
+//   box-sizing: border-box;
+//   span {
+//     display: flex;
+//     flex-direction: row;
+//     flex-wrap: wrap;
+//   }
+// }
+// .list-group-item {
+//   cursor: move;
+//   margin: 8px;
+//   width: 150px;
+//   height: 182px;
+//   background-color: lightcyan;
+// }
+// .list-group-item i {
+//   cursor: pointer;
+// }
 </style>
