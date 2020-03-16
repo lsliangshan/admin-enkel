@@ -95,12 +95,12 @@
 <script>
 // https://blog.csdn.net/Hua929323125/article/details/85319341
 import Velocity from 'velocity-animate'
-import { Menu, MenuGroup, MenuItem, Submenu, Icon, Poptip } from 'view-design'
+// import { Menu, MenuGroup, MenuItem, Submenu, Icon, Poptip } from 'view-design'
 import { routes } from '../router/routes'
 export default {
   name: 'SideMenu',
   components: {
-    Menu, MenuGroup, MenuItem, Submenu, Icon, Poptip
+    // Menu, MenuGroup, MenuItem, Submenu, Icon, Poptip
   },
   data () {
     return {

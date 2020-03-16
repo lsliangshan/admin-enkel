@@ -57,14 +57,14 @@
 </template>
 
 <script>
-import { Button, Icon, Drawer, Table, Switch, Modal, Input, Form, FormItem } from 'view-design'
+// import { Button, Icon, Drawer, Table, Switch, Modal, Input, Form, FormItem } from 'view-design'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('../../store/modules')
 export default {
   name: 'EditorBanner',
   components: {
-    Button, Icon, Drawer, Table, Modal, Input, Form, FormItem,
-    Switch
+    // Button, Icon, Drawer, Table, Modal, Input, Form, FormItem,
+    // Switch
   },
   data () {
     return {
@@ -147,13 +147,48 @@ export default {
           }
         },
         {
+          title: '排序',
           width: 200,
+          render: (h, params) => {
+            return h('Input', {
+              props: {
+                // type: 'number',
+                number: true
+              },
+              attrs: {
+                placeholder: '排序',
+                value: params.row.sort
+              },
+              style: {
+                outline: 'none',
+                userSelect: 'none',
+                boxShadow: 'none'
+              },
+              on: {
+                input: (value) => {
+                  params.row.sort = Math.max(-1, value)
+                }
+              }
+            })
+          }
+        },
+        {
+          width: 100,
           title: '状态',
           key: 'status',
           render: (h, params) => {
-            return h('Switch', {
+            return h('i-switch', {
               props: {
                 value: params.row.status
+              },
+              style: {
+                outline: 'none',
+                userSelect: 'none',
+                boxShadow: 'none'
+              },
+              attrs: {
+                trueColor: '#13ce66',
+                falseColor: '#ff4949'
               }
             })
           }
@@ -172,8 +207,12 @@ export default {
               }
             }, [
               h('Button', {
-                attrs: {
-                  class: 'btn-warning'
+                props: {
+                  type: 'warning',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '8px'
                 },
                 on: {
                   click: () => {
@@ -205,7 +244,9 @@ export default {
       this.containerHeight = parseInt(this.$refs['container'].offsetHeight) - 48
     })
     window.addEventListener('resize', (e) => {
-      this.containerHeight = parseInt(this.$refs['container'].offsetHeight) - 48
+      if (this.$refs['container']) {
+        this.containerHeight = parseInt(this.$refs['container'].offsetHeight) - 48
+      }
     })
   },
   methods: {

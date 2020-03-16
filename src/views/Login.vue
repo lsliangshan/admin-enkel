@@ -42,13 +42,13 @@
 </template>
 
 <script>
-import { Form, FormItem, Input, Button, Icon } from 'view-design'
+// import { Form, FormItem, Input, Button, Icon } from 'view-design'
 import { isEmptyObj } from '../utils'
 import * as types from '../store/mutation-types'
 export default {
   name: 'Login',
   components: {
-    Form, FormItem, Input, Button, Icon
+    // Form, FormItem, Input, Button, Icon
   },
   data () {
     return {

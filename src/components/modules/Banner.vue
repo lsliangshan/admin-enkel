@@ -135,13 +135,13 @@
 </template>
 
 <script>
-import { Button, Icon, Row, Col, Tooltip, Poptip, Modal, Form, FormItem, Input } from 'view-design'
+// import { Button, Icon, Row, Col, Tooltip, Poptip, Modal, Form, FormItem, Input } from 'view-design'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('../../store/modules')
 export default {
   name: 'ModuleBanner',
   components: {
-    Button, Icon, Row, Col, Tooltip, Poptip, Modal, Form, FormItem, Input
+    // Button, Icon, Row, Col, Tooltip, Poptip, Modal, Form, FormItem, Input
   },
   data () {
     return {

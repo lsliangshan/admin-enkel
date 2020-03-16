@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import { Icon } from 'view-design'
+// import { Icon } from 'view-design'
 import * as types from '../store/mutation-types'
 export default {
   name: 'Headers',
   components: {
-    Icon,
+    // Icon,
     LoginBox: () => import('./LoginBox'),
     HeaderContent: () => import('./HeaderContent')
   },

@@ -8,14 +8,15 @@ import * as filters from './filters'
 import mixins from './mixins'
 import './themes/index.less'
 // import 'view-design/src/styles/index.less'
-import { Notice, Message, LoadingBar } from 'view-design'
+// import { Notice, Message, LoadingBar } from 'view-design'
+import ViewUI from 'view-design'
 import "animate.css"
 import { storage, title, isEmptyObj } from './utils'
 const CryptoJS = require('crypto-js')
 
-Vue.prototype.$Notice = Notice
-Vue.prototype.$Message = Message
-Vue.prototype.$LoadingBar = LoadingBar
+// Vue.prototype.$Notice = Notice
+// Vue.prototype.$Message = Message
+// Vue.prototype.$LoadingBar = LoadingBar
 
 sync(store, router)
 
@@ -25,8 +26,10 @@ Object.keys(filters).forEach(key => {
 
 Vue.mixin(mixins)
 
-Vue.config.productionTip = false
+Vue.use(ViewUI)
 
+Vue.config.productionTip = false
+let LoadingBar = ViewUI.LoadingBar
 LoadingBar.config({
   color: '#f6ca9d'
 })

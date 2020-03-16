@@ -32,12 +32,12 @@
 </template>
 
 <script>
-import { Icon, Avatar, Dropdown, DropdownMenu, DropdownItem } from 'view-design'
+// import { Icon, Avatar, Dropdown, DropdownMenu, DropdownItem } from 'view-design'
 import * as types from '../store/mutation-types'
 export default {
   name: 'LoginBox',
   components: {
-    Icon, Avatar, Dropdown, DropdownMenu, DropdownItem
+    // Icon, Avatar, Dropdown, DropdownMenu, DropdownItem
   },
   computed: {
     assets () {

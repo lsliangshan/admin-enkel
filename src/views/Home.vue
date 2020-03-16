@@ -25,12 +25,12 @@
 
 <script>
 // @ is an alias to /src
-import { Button, Layout, Header, Sider } from 'view-design'
+// import { Button, Layout, Header, Sider } from 'view-design'
 import * as types from '../store/mutation-types'
 export default {
   name: 'home',
   components: {
-    Button, Layout, Header, Sider,
+    // Button, Layout, Header, Sider,
     Headers: () => import('../components/Headers'),
     SideMenu: () => import('../components/SideMenu'),
     Content: () => import('../components/Content'),
