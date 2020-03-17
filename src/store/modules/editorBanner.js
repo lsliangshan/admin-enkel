@@ -55,7 +55,8 @@ const editorBanner = {
   namespaced: true,
   state: {
     requestParams: {
-      baseUrl: 'http://127.0.0.1:3000',
+      baseUrl: 'https://talkapi.dei2.com',
+      // baseUrl: 'http://127.0.0.1:3000',
       list: '/enkel/bannerEditor/list',
       sortedlist: '/enkel/bannerEditor/sortedList',
       add: '/enkel/bannerEditor/add',
