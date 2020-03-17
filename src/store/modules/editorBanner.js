@@ -57,9 +57,11 @@ const editorBanner = {
     requestParams: {
       baseUrl: 'http://127.0.0.1:3000',
       list: '/enkel/bannerEditor/list',
+      sortedlist: '/enkel/bannerEditor/sortedList',
       add: '/enkel/bannerEditor/add',
       modify: '/enkel/bannerEditor/modify',
-      del: '/enkel/bannerEditor/del'
+      del: '/enkel/bannerEditor/del',
+      save: '/enkel/bannerEditor/save'
     }
   },
   getters: {
@@ -72,6 +74,19 @@ const editorBanner = {
           url: state.requestParams.list,
           method: 'POST',
           data: qs.stringify(data)
+        }).then(({ data }) => {
+          resolve(data)
+        }).catch(() => {
+          resolve({})
+        })
+      })
+    },
+    sortedlist ({ state, dispatch, rootState }) {
+      return new Promise(resolve => {
+        instance({
+          baseURL: state.requestParams.baseUrl,
+          url: state.requestParams.sortedlist,
+          method: 'POST'
         }).then(({ data }) => {
           resolve(data)
         }).catch(() => {
@@ -112,6 +127,20 @@ const editorBanner = {
         instance({
           baseURL: state.requestParams.baseUrl,
           url: state.requestParams.del,
+          method: 'POST',
+          data: qs.stringify(data)
+        }).then(({ data }) => {
+          resolve(data)
+        }).catch(() => {
+          resolve({})
+        })
+      })
+    },
+    save ({ state, dispatch, rootState }, data) {
+      return new Promise(resolve => {
+        instance({
+          baseURL: state.requestParams.baseUrl,
+          url: state.requestParams.save,
           method: 'POST',
           data: qs.stringify(data)
         }).then(({ data }) => {

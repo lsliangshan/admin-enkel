@@ -21,7 +21,8 @@
                   style="margin-right: 5px;"
                   @click="resetList">重置</Button>
           <Button type="primary"
-                  size="small">确定</Button>
+                  size="small"
+                  @click="save">确定</Button>
         </div>
         <draggable element="span"
                    v-model="list2"
@@ -43,6 +44,7 @@
                      :alt="item.enkel_banner.title">
               </div>
               <div class="list-group-item-desc">{{item.enkel_banner.title}}</div>
+              <div class="list-group-item-header">{{index + 1}}</div>
             </div>
           </transition-group>
         </draggable>
@@ -78,6 +80,28 @@
                      :alt="item.enkel_banner.title">
               </div>
               <div class="list-group-item-desc">{{item.enkel_banner.title}}</div>
+              <div class="list-group-item-status">
+                <i-switch size="small"
+                          style="outline: none;"
+                          true-color="#13ce66"
+                          false-color="#ff4949"
+                          :value="item.status"
+                          :true-value="true"
+                          :false-value="false"
+                          @on-change="status => {changeStatus(status, item.uuid, index)}" />
+              </div>
+
+              <div class="list-group-item-delete">
+                <Poptip confirm
+                        transfer
+                        title="删除后将无法恢复，确认吗？"
+                        @on-ok="deleteItem(item.uuid, index)">
+                  <Icon type="md-trash"
+                        size="18"
+                        color="#ff4949" />
+                </Poptip>
+              </div>
+
             </div>
           </transition-group>
         </draggable>
@@ -127,6 +151,7 @@
 
 <script>
 // import { Button, Icon, Drawer, Table, Switch, Modal, Input, Form, FormItem } from 'view-design'
+import qs from "querystring"
 import draggable from 'vuedraggable'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('../../store/modules')
@@ -148,6 +173,7 @@ export default {
       },
       list: [],
       list2: [],
+      cachedSortedList: [],
       loading: true,
       pageIndex: 1,
       pageSize: 20,
@@ -200,6 +226,7 @@ export default {
     },
   },
   created () {
+    this.initSortedList()
     this.init()
   },
   mounted () {
@@ -229,6 +256,12 @@ export default {
         resolve(res)
       })
     },
+    requestSortedList () {
+      return new Promise(async (resolve) => {
+        let res = await this.store.dispatch('editorBanner/sortedlist')
+        resolve(res)
+      })
+    },
     requestAdd (data) {
       return new Promise(async (resolve) => {
         let res = await this.store.dispatch('editorBanner/add', data)
@@ -247,6 +280,12 @@ export default {
         resolve(res)
       })
     },
+    requestSave (data) {
+      return new Promise(async (resolve) => {
+        let res = await this.store.dispatch('editorBanner/save', data)
+        resolve(res)
+      })
+    },
     async initMaterialList () {
       let response = await this.requestMaterialList({
         pageIndex: this.material.pageIndex,
@@ -259,6 +298,14 @@ export default {
         } else {
           this.material.list = this.material.list.concat(response.data.list || [])
         }
+      } else {
+      }
+    },
+    async initSortedList () {
+      let response = await this.requestSortedList()
+      if (response.status == 200) {
+        this.list2 = response.data.list || []
+        this.cachedSortedList = response.data.list || []
       } else {
       }
     },
@@ -344,6 +391,44 @@ export default {
     resetList () {
       this.list = this.list.concat(this.list2)
       this.list2 = []
+    },
+    async changeStatus (status, uuid, index) {
+      this.list[index].status = status
+      let response = await this.requestModify({
+        uuid: uuid,
+        status: status
+      })
+      if (response.status !== 200) {
+        setTimeout(() => {
+          this.list[index].status = !status
+        }, 500)
+      }
+    },
+    async deleteItem (uuid, index) {
+      let response = await this.requestDel({
+        uuid: uuid
+      })
+      if (response.status === 200) {
+        // 删除成功
+        this.list.splice(index, 1)
+        this.$Message.success('删除成功')
+      } else {
+        this.$Message.error('删除失败')
+      }
+    },
+    async save () {
+      let _list = JSON.parse(JSON.stringify(this.list2))
+      _list = _list.map((item, index) => Object.assign({}, item, {
+        sort: index
+      }))
+      let response = await this.requestSave({
+        list: JSON.stringify(_list)
+      })
+      if (response.status === 200) {
+        this.$Message.success('保存成功')
+      } else {
+        this.$Message.error('保存失败')
+      }
     }
   },
   watch: {
@@ -414,6 +499,7 @@ export default {
           background-color: #f0f0f0;
         }
         &-item {
+          position: relative;
           cursor: move;
           margin: 8px;
           width: 150px;
@@ -454,6 +540,21 @@ export default {
             text-overflow: ellipsis;
             white-space: nowrap;
           }
+          &-header {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            left: 0;
+            top: 0;
+            padding: 0 5px;
+            box-sizing: border-box;
+            font-size: 13px;
+            color: #000;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+          }
         }
       }
     }
@@ -471,6 +572,7 @@ export default {
         padding: 10px;
         box-sizing: border-box;
         &-item {
+          position: relative;
           cursor: move;
           margin: 8px;
           width: 150px;
@@ -511,6 +613,29 @@ export default {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+          }
+          &-status {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            width: 30px;
+            height: 20px;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-end;
+          }
+          &-delete {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 30px;
+            height: 20px;
+            z-index: 3;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
           }
         }
         &-header {
