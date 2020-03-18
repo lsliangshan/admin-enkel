@@ -13,7 +13,6 @@ export default {
   }
 }
 </script>
-
 <style lang="less">
 @import url("./themes/index.less");
 * {
