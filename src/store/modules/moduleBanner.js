@@ -55,7 +55,8 @@ const moduleBanner = {
   namespaced: true,
   state: {
     requestParams: {
-      baseUrl: 'http://127.0.0.1:3000',
+      // baseUrl: 'http://127.0.0.1:3000',
+      baseUrl: 'https://talkapi.dei2.com',
       list: '/enkel/banner/list',
       add: '/enkel/banner/add',
       modify: '/enkel/banner/modify',

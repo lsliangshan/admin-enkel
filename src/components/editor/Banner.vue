@@ -143,6 +143,7 @@
           </transition>
         </div>
         <div class="material_item_blank"></div>
+        <div class="material_item_blank"></div>
       </div>
     </Drawer>
 
@@ -730,7 +731,7 @@ export default {
     }
   }
   .material_item_blank {
-    width: 200px;
+    width: 120px;
     height: 0;
   }
 }

@@ -30,7 +30,7 @@ export const routerContent = {
   path: '/',
   name: 'home',
   meta: {
-    title: 'BDP业务分发平台'
+    title: 'Enkel Admin'
   },
   components: {
     HomeRouter: () => import('../views/Home')

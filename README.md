@@ -1,4 +1,4 @@
-# admin-bdp
+# admin-enkel
 
 ## Project setup
 ```

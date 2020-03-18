@@ -72,10 +72,27 @@
                   prop="title">
           <Input v-model="addModal.data.title"></Input>
         </FormItem>
-        <FormItem label="跳转链接"
-                  prop="url">
-          <Input v-model="addModal.data.url"></Input>
+        <FormItem label="类型">
+          <Select v-model="addModal.data.type">
+            <Option v-for="(item, index) in allTypes"
+                    :key="index"
+                    :value="item.value"
+                    :label="item.label">
+              <span>{{item.label}}</span>
+              <span v-if="item.value == 'tag'"
+                    style="float:right;color:#ccc">用【标题】作为关键词搜索，请认真填写【标题】</span>
+              <span v-if="item.value == 'url'"
+                    style="float:right;color:#ccc">跳转到【跳转链接】</span>
+            </Option>
+          </Select>
         </FormItem>
+        <transition name="fade">
+          <FormItem label="跳转链接"
+                    prop="url"
+                    v-if="addModal.data.type == 'url'">
+            <Input v-model="addModal.data.url"></Input>
+          </FormItem>
+        </transition>
         <FormItem label="图片"
                   prop="cover">
           <Input v-model="addModal.data.cover"></Input>
@@ -112,10 +129,31 @@
                   prop="title">
           <Input v-model="modifyModal.data.title"></Input>
         </FormItem>
-        <FormItem label="跳转链接"
+        <FormItem label="类型">
+          <Select v-model="modifyModal.data.type">
+            <Option v-for="(item, index) in allTypes"
+                    :key="index"
+                    :value="item.value"
+                    :label="item.label">
+              <span>{{item.label}}</span>
+              <span v-if="item.value == 'tag'"
+                    style="float:right;color:#ccc">用【标题】作为关键词搜索，请认真填写【标题】</span>
+              <span v-if="item.value == 'url'"
+                    style="float:right;color:#ccc">跳转到【跳转链接】</span>
+            </Option>
+          </Select>
+        </FormItem>
+        <transition name="fade">
+          <FormItem label="跳转链接"
+                    prop="url"
+                    v-if="modifyModal.data.type == 'url'">
+            <Input v-model="modifyModal.data.url"></Input>
+          </FormItem>
+        </transition>
+        <!-- <FormItem label="跳转链接"
                   prop="url">
           <Input v-model="modifyModal.data.url"></Input>
-        </FormItem>
+        </FormItem> -->
         <FormItem label="图片"
                   prop="cover">
           <Input v-model="modifyModal.data.cover"></Input>
@@ -154,7 +192,8 @@ export default {
         data: {
           title: '',
           cover: '',
-          url: ''
+          url: '',
+          type: 'tag'
         }
       },
       modifyModal: {
@@ -164,9 +203,20 @@ export default {
         data: {
           title: '',
           cover: '',
-          url: ''
+          url: '',
+          type: 'tag'
         }
       },
+      allTypes: [
+        {
+          label: '标签',
+          value: 'tag'
+        },
+        {
+          label: 'URL',
+          value: 'url'
+        }
+      ],
       rules: {
         title: [
           {

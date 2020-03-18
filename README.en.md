@@ -1,7 +1,7 @@
-# admin-bdp
+# admin-enkel
 
 #### Description
-BDP Dashboard
+Enkel Admin
 
 #### Software Architecture
 Software architecture description

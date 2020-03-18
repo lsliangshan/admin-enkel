@@ -6,7 +6,7 @@
       </svg>
     </div>
     <div class="login_box">
-      <div class="login_box_header">BDP</div>
+      <div class="login_box_header">Enkel</div>
       <div class="login_box_form">
         <Form ref="formRef"
               :model="formData"
@@ -36,7 +36,7 @@
           </FormItem>
         </Form>
       </div>
-      <div class="login_box_footer">BDP Admin</div>
+      <div class="login_box_footer">Enkel Admin</div>
     </div>
   </div>
 </template>
@@ -218,7 +218,7 @@ export default {
     .login_box_footer {
       width: 100%;
       height: 48px;
-      color: #000;
+      color: #555;
       font-size: 15px;
       border-top: 1px solid darken(@theme-bg-color, 5%);
       display: flex;

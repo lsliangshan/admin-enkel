@@ -1,6 +1,6 @@
 import localforage from 'localforage'
 
-const storeName = 'BDP'
+const storeName = 'Enkel'
 
 const userStore = localforage.createInstance({
   name: storeName,
