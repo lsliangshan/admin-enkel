@@ -41,7 +41,9 @@ import * as mutations from './mutations'
 import * as getters from './getters'
 
 import moduleBanner from './modules/moduleBanner'
+import moduleEntrance from './modules/moduleEntrance'
 import editorBanner from './modules/editorBanner'
+import editorEntrance from './modules/editorEntrance'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
@@ -50,7 +52,9 @@ const store = new Vuex.Store({
   getters: getters.getters,
   modules: {
     moduleBanner,
-    editorBanner
+    moduleEntrance,
+    editorBanner,
+    editorEntrance
   },
   state: {
     theme: 'index',

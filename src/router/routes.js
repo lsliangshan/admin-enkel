@@ -44,6 +44,16 @@ export const editorRouter = {
       components: {
         ContentRouter: () => import('../components/editor/Banner')
       }
+    },
+    {
+      path: '/editor/entrance',
+      name: 'entrance',
+      label: 'Entrance编辑器',
+      title: 'Entrance编辑器',
+      role: ['999'],
+      components: {
+        ContentRouter: () => import('../components/editor/Entrance')
+      }
     }
   ]
 }

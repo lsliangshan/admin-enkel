@@ -51,16 +51,18 @@ function formatParams (data) {
   arr.push('v=' + random())
   return arr.join('&')
 }
-const moduleEntrance = {
+const editorEntrance = {
   namespaced: true,
   state: {
     requestParams: {
-      // baseUrl: 'http://127.0.0.1:3000',
       baseUrl: 'https://talkapi.dei2.com',
-      list: '/enkel/entrance/list',
-      add: '/enkel/entrance/add',
-      modify: '/enkel/entrance/modify',
-      del: '/enkel/entrance/del'
+      // baseUrl: 'http://127.0.0.1:3000',
+      list: '/enkel/entranceEditor/list',
+      sortedlist: '/enkel/entranceEditor/sortedList',
+      add: '/enkel/entranceEditor/add',
+      modify: '/enkel/entranceEditor/modify',
+      del: '/enkel/entranceEditor/del',
+      save: '/enkel/entranceEditor/save'
     }
   },
   getters: {
@@ -73,6 +75,19 @@ const moduleEntrance = {
           url: state.requestParams.list,
           method: 'POST',
           data: qs.stringify(data)
+        }).then(({ data }) => {
+          resolve(data)
+        }).catch(() => {
+          resolve({})
+        })
+      })
+    },
+    sortedlist ({ state, dispatch, rootState }) {
+      return new Promise(resolve => {
+        instance({
+          baseURL: state.requestParams.baseUrl,
+          url: state.requestParams.sortedlist,
+          method: 'POST'
         }).then(({ data }) => {
           resolve(data)
         }).catch(() => {
@@ -122,7 +137,21 @@ const moduleEntrance = {
         })
       })
     },
+    save ({ state, dispatch, rootState }, data) {
+      return new Promise(resolve => {
+        instance({
+          baseURL: state.requestParams.baseUrl,
+          url: state.requestParams.save,
+          method: 'POST',
+          data: qs.stringify(data)
+        }).then(({ data }) => {
+          resolve(data)
+        }).catch(() => {
+          resolve({})
+        })
+      })
+    },
   }
 }
 
-export default moduleEntrance
+export default editorEntrance
